@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="jar" build-on-make="true" name="MedicineManager:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/MedicineManager_jar</output-path>
+    <root id="archive" name="MedicineManager.jar">
+      <element id="module-output" name="MedicineManager" />
+    </root>
+  </artifact>
+</component>

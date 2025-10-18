@@ -76,10 +76,29 @@ public class Menu {
             System.out.println((i+1) + ": "+ categories.get(i));
         }
         if (medicines.isEmpty()) return;
-        String category  = inputChecker.readString("Введите категорию (буквами): ",scanner);
-        List<Medicine> medicinesByCategory = medicines.stream().filter(x -> x.getCategory().equals(category)).toList();
+        int choice = inputChecker.readInt("Выберите категорию (номер): ", 1, categories.size(), scanner);
+        String category = categories.get(choice - 1);
+        List<Medicine> medicinesByCategory = medicines.stream().filter(x -> x.getCategory().equalsIgnoreCase(category.trim())).toList();
         if (medicinesByCategory.isEmpty()) {System.out.println("Список с данной категорией пуст"); return;}
         pagination(medicinesByCategory,medicinesByCategory.size());
+
+//        System.out.println("--- ВЫБЕРИТЕ КАТЕГОРИЮ ---");
+//        List<String> categories = medicineService.getAllCategories();
+//
+//        for (int i = 0; i < categories.size(); i++) {
+//            System.out.println((i+1) + ": "+ categories.get(i));
+//        }
+//
+//        if (medicines.isEmpty()) return;
+//
+//        // ⭐ ВЫБИРАЕМ ИЗ СПИСКА, А НЕ ВВОДИМ ВРУЧНУЮ ⭐
+
+//
+//        List<Medicine> medicinesByCategory = medicines.stream()
+//                .filter(x -> x.getCategory().equals(category))
+//                .toList();
+//
+//        pagination(medicinesByCategory, medicinesByCategory.size());
 
     }
 
@@ -151,7 +170,7 @@ public class Menu {
         Medicine newMed = new Medicine(name,description, date,category,count);
         medicineService.changeMedicine(index,newMed);
         System.out.println("✅ Лекарство успешно изменено");
-        System.out.println(newMed.toString());
+        System.out.println(newMed);
     }
 
     private void deleteMedicine(){
@@ -201,6 +220,7 @@ public class Menu {
                 }
                 case 3 -> inLogsMenu = false;
             }
+
         }
     }
 

@@ -23,8 +23,8 @@ public class InputChecker {
    public String readString(String message, Scanner scanner) {
        while (true){
            System.out.print(message);
-           String str = scanner.nextLine().trim();
-           if (!str.trim().isEmpty()) return str;
+           String str = scanner.nextLine().strip();
+           if (!str.isBlank()) return str;
            else System.out.println("Вы ввели что то не так, попробуйте еще раз");
        }
    }

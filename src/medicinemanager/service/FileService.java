@@ -4,28 +4,38 @@ import model.Medicine;
 
 import java.io.*;
 
-import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
 public class FileService {
 
     private final String pathMedicines = "medicines.dat";
-    private static final String pathSettings = "src/settings/settings.txt";
+    private static final String pathSettings = getSettingsPath();
+
+
+    private static String getSettingsPath() {
+
+        String classPath = FileService.class.getProtectionDomain()
+                .getCodeSource().getLocation().getPath();
+        if (classPath.endsWith(".jar")) {
+            return "settings.txt";
+        } else {
+            return "src/settings/settings.txt";
+        }
+    }
 
     public static int readSettings(){
         Path path = Path.of(pathSettings);
         try {
             String str = Files.readString(path).strip();
-            int res = Integer.parseInt(str.substring(str.indexOf("=") + 1));
-            return res;
-        } catch (Exception e) {
-            System.out.println("Что-то пошло не так");
-            System.out.println(e.getMessage());
+            return Integer.parseInt(str.substring(str.indexOf("=") + 1));
+
+        }
+        catch (Exception e) {
+            System.out.println("При загрузке настроек что-то пошло не так: " + e.getMessage());
             return 10;
         }
     }
