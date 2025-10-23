@@ -60,7 +60,6 @@ public class FileService {
         }
     }
 
-    // ЗАГРУЗКА ЛЕКАРСТВ
     public List<Medicine> loadMedicines() {
         try {
             Path path = Paths.get(pathMedicines);
@@ -76,7 +75,7 @@ public class FileService {
             return new ArrayList<>();
         }
     }
-    // КОНВЕРТАЦИЯ В БАЙТЫ
+
     private byte[] convertToBytes(List<Medicine> medicines) throws IOException {
         try (ByteArrayOutputStream baos = new ByteArrayOutputStream();
              DataOutputStream dos = new DataOutputStream(baos)) {

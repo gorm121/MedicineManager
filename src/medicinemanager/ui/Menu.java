@@ -81,25 +81,6 @@ public class Menu {
         List<Medicine> medicinesByCategory = medicines.stream().filter(x -> x.getCategory().equalsIgnoreCase(category.trim())).toList();
         if (medicinesByCategory.isEmpty()) {System.out.println("Список с данной категорией пуст"); return;}
         pagination(medicinesByCategory,medicinesByCategory.size());
-
-//        System.out.println("--- ВЫБЕРИТЕ КАТЕГОРИЮ ---");
-//        List<String> categories = medicineService.getAllCategories();
-//
-//        for (int i = 0; i < categories.size(); i++) {
-//            System.out.println((i+1) + ": "+ categories.get(i));
-//        }
-//
-//        if (medicines.isEmpty()) return;
-//
-//        // ⭐ ВЫБИРАЕМ ИЗ СПИСКА, А НЕ ВВОДИМ ВРУЧНУЮ ⭐
-
-//
-//        List<Medicine> medicinesByCategory = medicines.stream()
-//                .filter(x -> x.getCategory().equals(category))
-//                .toList();
-//
-//        pagination(medicinesByCategory, medicinesByCategory.size());
-
     }
 
     private void showSortedByName(List<Medicine> medicines) {
