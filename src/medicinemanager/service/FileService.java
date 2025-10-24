@@ -54,7 +54,6 @@ public class FileService {
         try {
             byte[] data = convertToBytes(medicines);
             Files.write(Paths.get(pathMedicines), data);
-            System.out.println("Лекарства сохранены в файл");
         } catch (IOException e) {
             System.out.println("Ошибка сохранения: " + e.getMessage());
         }

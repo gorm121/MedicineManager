@@ -16,7 +16,6 @@ public class MedicineService {
         loadFromFile();
     }
 
-    // ЗАГРУЗКА ИЗ ФАЙЛА
     public void loadFromFile() {
         List<Medicine> loadedMedicines = fileService.loadMedicines();
         if (loadedMedicines != null) {
@@ -32,7 +31,6 @@ public class MedicineService {
         }
     }
 
-    // СОХРАНЕНИЕ В ФАЙЛ
     public void saveToFile() {
         fileService.saveMedicines(medicines);
     }
@@ -58,5 +56,22 @@ public class MedicineService {
     public List<Medicine> getAllMedicines() { return medicines;}
     public List<String> getAllCategories() { return categories; }
 
+
+    public void renameCategory(String oldName, String newName) {
+        medicines.stream()
+                .filter(m -> oldName.equalsIgnoreCase(m.getCategory()))
+                .forEach(m -> m.setCategory(newName));
+
+        categories.replaceAll(c -> oldName.equalsIgnoreCase(c) ? newName : c);
+        saveToFile();
+    }
+
+    public void removeCategory(String category) {
+        medicines.stream()
+                .filter(m -> category.equalsIgnoreCase(m.getCategory()))
+                .forEach(m -> m.setCategory("Без категории"));
+        categories.removeIf(c -> c.equalsIgnoreCase(category));
+        saveToFile();
+    }
 
 }

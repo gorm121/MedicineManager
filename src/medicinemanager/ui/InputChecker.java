@@ -1,8 +1,6 @@
 package ui;
 
-import javax.swing.plaf.PanelUI;
 import java.time.LocalDate;
-import java.util.Date;
 import java.util.Scanner;
 
 public class InputChecker {
@@ -20,7 +18,7 @@ public class InputChecker {
         }
     }
 
-   public String readString(String message, Scanner scanner) {
+   public String readNonEmptyString(String message, Scanner scanner) {
        while (true){
            System.out.print(message);
            String str = scanner.nextLine().strip();

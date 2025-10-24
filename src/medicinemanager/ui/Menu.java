@@ -21,13 +21,15 @@ public class Menu {
     public void start() {
         System.out.println("Размер страницы: " + pageSize);
         while (true) {
-            showMainMenu();
+            UI.showMainMenu();
             int choice = inputChecker.readInt("Ваш выбор: ",0, 6,scanner);
 
             switch (choice) {
                 case 1 -> showMedicines();
                 case 2 -> manageMedicines();
-                case 3 -> changePageSize();
+                case 3 -> renameCategory();
+                case 4 -> removeCategory();
+                case 5 -> changePageSize();
                 case 0 -> {
                     System.out.println("Выход...");
                     return;
@@ -37,7 +39,7 @@ public class Menu {
     }
 
     private void showMedicines() {
-        showMedicinesMenu();
+        UI.showMedicinesMenu();
         int choice = inputChecker.readInt("Ваш выбор: ",0, 5,scanner);
 
         List<Medicine> medicines = medicineService.getAllMedicines();
@@ -53,7 +55,7 @@ public class Menu {
     }
 
     private void manageMedicines() {
-        showMenuForManagementMedicines();
+        UI.showMenuForManagementMedicines();
         int choice = inputChecker.readInt("Ваш выбор: ",0, 4,scanner);
 
         switch (choice) {
@@ -109,21 +111,21 @@ public class Menu {
 
     private void addMedicine() {
         System.out.println("=== ➕ ДОБАВЛЕНИЕ ЛЕКАРСТВА ===");
-        String name = inputChecker.readString("Название: ",scanner);
-        String description = inputChecker.readString("Описание: ",scanner);
+        String name = inputChecker.readNonEmptyString("Название: ",scanner);
+        String description = inputChecker.readNonEmptyString("Описание: ",scanner);
         LocalDate date = inputChecker.readDate("Срок годности (ГГГГ-ММ-ДД): ",scanner);
-        String category = inputChecker.readString("Категория: ",scanner);
+        String category = inputChecker.readNonEmptyString("Категория: ",scanner);
         int count = inputChecker.readInt("Количество: ", 1, 1000,scanner);
 
         Medicine medicine = new Medicine(name, description, date, category, count);
         medicineService.addMedicine(medicine);
-        System.out.println("✅ Лекарство добавлено!");
+        System.out.println(" Лекарство добавлено!");
     }
 
     private void findMedicine(){
         System.out.println("=== \uD83D\uDD0D ПОИСК ЛЕКАРСТВА ===");
 
-        String str = inputChecker.readString("Поиск: ", scanner);
+        String str = inputChecker.readNonEmptyString("Поиск: ", scanner);
         List<Medicine> medicines = medicineService.getAllMedicines().stream().filter(x -> x.toString().toLowerCase().contains(str.toLowerCase())).toList();
         if (!medicines.isEmpty()) pagination(medicines,medicines.size());
     }
@@ -134,10 +136,10 @@ public class Menu {
             System.out.println("Лекарства отсутсвуют");
             return;
         }
-//        for (int i = 0; i < medicines.size(); i++){
-//            System.out.println((i+1) + ": " + medicines.get(i).toString());
-//        }
-
+        for (int i = 0; i < medicines.size(); i++){
+            System.out.println((i+1) + ": " + medicines.get(i).toString());
+        }
+        System.out.println("-".repeat(143));
         System.out.println("=== ИЗМЕНИЕ ЛЕКАРСТВА ===");
         int index = inputChecker.readInt("Введите номер лекарства которе хотите изменить: ",1,medicines.size(),scanner) - 1;
         Medicine med = medicines.get(index);
@@ -150,7 +152,7 @@ public class Menu {
 
         Medicine newMed = new Medicine(name,description, date,category,count);
         medicineService.changeMedicine(index,newMed);
-        System.out.println("✅ Лекарство успешно изменено");
+        System.out.println(" Лекарство успешно изменено");
         System.out.println(newMed);
     }
 
@@ -208,57 +210,63 @@ public class Menu {
     private void showMedicinesWithPage(List<Medicine> medicines, int currentPage, int size) {
         if (medicines.isEmpty()) return;
         currentPage *= pageSize;
-        System.out.println("-----------------------------------------------------------------------------------------------------------------------------------------------");
+        System.out.println("-".repeat(143));
         for (int i = 0; i < medicines.size(); i++) {
             if (i >= currentPage - pageSize && i < currentPage)
                 System.out.println((i + 1) + ". " + medicines.get(i).toString());
         }
-        System.out.println("-----------------------------------------------------------------------------------------------------------------------------------------------");
+        System.out.println("-".repeat(143));
         System.out.println("Текущая страница: " + currentPage/pageSize + " из: " + (int)(Math.ceil(((double) size/pageSize))));
-        System.out.println("-----------------------------------------------------------------------------------------------------------------------------------------------");
+        System.out.println("-".repeat(143));
     }
 
+    private void renameCategory() {
+        List<String> cats = medicineService.getAllCategories();
+        if (cats.isEmpty()) {
+            System.out.println("Нет категорий для переименования.");
+            return;
+        }
+        System.out.println("Существующие категории: " + String.join(", ", cats));
 
+        String oldName = inputChecker.readNonEmptyString(
+                "Введите категорию для переименования: ",scanner);
+        if (cats.stream().noneMatch(oldName::equalsIgnoreCase)) {
+            System.out.println("Категория не найдена.");
+            return;
+        }
+
+        String newName = inputChecker.readNonEmptyString("Введите новое название: ",scanner);
+        medicineService.renameCategory(oldName, newName);
+        System.out.println("Категория переименована.");
+    }
+
+    private void removeCategory() {
+        List<String> cats = medicineService.getAllCategories();
+        if (cats.isEmpty()) {
+            System.out.println("Нет категорий для удаления.");
+            return;
+        }
+        System.out.println("Существующие категории: " + String.join(", ", cats));
+
+        String cat = inputChecker.readNonEmptyString(
+                "Введите категорию для удаления (лекарства станут 'Без категории'): ",scanner);
+        if (cats.stream().noneMatch(cat::equalsIgnoreCase)) {
+            System.out.println("Категория не найдена.");
+            return;
+        }
+
+        medicineService.removeCategory(cat);
+        System.out.println("Категория удалена.");
+    }
 
 
 
     private void changePageSize() {
-        System.out.println("=== 🖥 НАСТРОЙКИ ===");
+        System.out.println("===  НАСТРОЙКИ ===");
         System.out.println("Текущий размер страницы: " + pageSize);
         pageSize = inputChecker.readInt("Новый размер страницы: ", 1, 100,scanner);
-        System.out.println("✅ Размер страницы изменен на: " + pageSize);
+        System.out.println(" Размер страницы изменен на: " + pageSize);
         FileService.saveSettings(pageSize);
-    }
-
-
-    public void showMainMenu(){
-        System.out.println("=== 🏠 ДОМАШНЯЯ АПТЕЧКА ===");
-        System.out.println("1. 💊 Показать все лекарства");
-        System.out.println("2. 📇 Управление лекарствами");
-        System.out.println("3. 🖥 Настройки");
-        System.out.println("0. 🚪 Выход");
-
-    }
-
-    public void showMedicinesMenu(){
-        System.out.println("=== 💊 СПИСОК ЛЕКАРСТВ ===");
-        System.out.println("1. Показать все");
-        System.out.println("2. Показать по категориям");
-        System.out.println("3. Сортировать по названию (А-Я)");
-        System.out.println("4. Сортировать по сроку годности");
-        System.out.println("5. Показать просроченные");
-        System.out.println("0. Назад");
-
-    }
-
-    public void showMenuForManagementMedicines(){
-        System.out.println("=== 💊 Управление лекарствами ===");
-        System.out.println("1. ➕ Добавить лекарство");
-        System.out.println("2. 🔍 Найти лекарство");
-        System.out.println("3. ✏ Изменить лекарство");
-        System.out.println("4. 🗑 Удалить лекарство");
-        System.out.println("0. Назад");
-
     }
 
 }
