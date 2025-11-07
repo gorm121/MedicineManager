@@ -19,7 +19,7 @@ public class Menu {
     }
 
     public void start() {
-        System.out.println("Размер страницы: " + pageSize);
+        System.out.println("Размер страницы:  " + pageSize);
         while (true) {
             UI.showMainMenu();
             int choice = inputChecker.readInt("Ваш выбор: ",0, 6,scanner);
@@ -185,8 +185,8 @@ public class Menu {
         while (inLogsMenu) {
             System.out.println("\n1. Следующая страница");
             System.out.println("2. Предыдущая страница");
-            System.out.println("3. Вернуться в главное меню");
-            int choice = inputChecker.readInt("Ваше действие: ", 1 ,3 ,scanner);
+            System.out.println("0. Вернуться в главное меню");
+            int choice = inputChecker.readInt("Ваше действие: ", 0 , 2,scanner);
             int checkPage = currentPage;
             switch (choice) {
                 case 1 -> {
@@ -201,7 +201,7 @@ public class Menu {
                         showMedicinesWithPage(medicines,currentPage,size);
                     else System.out.println("Больше нет лекарств");
                 }
-                case 3 -> inLogsMenu = false;
+                case 0 -> inLogsMenu = false;
             }
 
         }

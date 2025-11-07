@@ -12,7 +12,7 @@ import java.util.List;
 
 public class FileService {
 
-    private final String pathMedicines = "medicines.dat";
+    private final String pathMedicines = "medicines.bin";
     private static final String pathSettings = getSettingsPath();
 
 
